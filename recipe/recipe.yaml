@@ -1,25 +1,28 @@
-{% set name = "kernel-tuner" %}
-{% set version = "1.3.3" %}
-{% set python_min = "3.11" %}
+schema_version: 1
+
+context:
+  name: kernel-tuner
+  version: "1.3.3"
+  python_min: "3.11"
 
 package:
-  name: {{ name|lower }}
-  version: {{ version }}
+  name: ${{ name|lower }}
+  version: ${{ version }}
 
 source:
-  url: https://pypi.org/packages/source/{{ name[0] }}/kernel_tuner/kernel_tuner-{{ version }}.tar.gz
+  url: https://pypi.org/packages/source/${{ name[0] }}/kernel_tuner/kernel_tuner-${{ version }}.tar.gz
   sha256: aa9fc6754fa9964c1e9891ab1d3da4350d98ccc3d0dc6cd9023b92d929bba8f8
 
 build:
-  script: {{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
-  number: 0
+  number: 1
   noarch: python
+  script: ${{ PYTHON }} -m pip install . -vv --no-deps --no-build-isolation
 
 requirements:
   host:
     - pip
     - poetry-core >=1.7.0
-    - python {{ python_min }}
+    - python ${{ python_min }}.*
     - setuptools >=67.7.2
   run:
     - __unix
@@ -28,34 +31,37 @@ requirements:
     - packaging
     - python-constraint2 >=2.4.0
     - pandas >=2.0.0
-    - python >={{ python_min }},<4
+    - python >=${{ python_min }},<4
     - scikit-learn >=1.0.2
     - scipy >=1.14.1
     - xmltodict
 
-test:
-  commands:
-    - pip check
-    - pytest -k 'not test_memcpy_dtoh and not test_memcpy_host_htod and not test_refresh_memory'
-  imports:
-    - kernel_tuner
-  requires:
-    - mock
-    - pep440
-    - pip
-    - pytest >=7.4
-    - pytest-cov
-    - scikit-optimize =0.10.2
-    - tomli
-    - python {{ python_min }}
-  source_files:
-    - pyproject.toml
-    - test
-    - README.md
+tests:
+  - python:
+      imports:
+        - kernel_tuner
+      pip_check: true
+      python_version: ${{ python_min }}
+  - files:
+      source:
+        - pyproject.toml
+        - test
+        - README.md
+    requirements:
+      run:
+        - mock
+        - pep440
+        - pip
+        - pytest >=7.4
+        - pytest-cov
+        - scikit-optimize =0.10.2
+        - tomli
+        - python ${{ python_min }}.*
+    script:
+      - pytest -k 'not test_memcpy_dtoh and not test_memcpy_host_htod and not test_refresh_memory'
 
 about:
-  home: https://github.com/kerneltuner/kernel_tuner
-  summary: 'An easy to use CUDA/OpenCL kernel tuner in Python'
+  summary: An easy to use CUDA/OpenCL kernel tuner in Python
   description: |
     Kernel Tuner simplifies the software development of optimized and
     auto-tuned GPU programs, by enabling Python-based unit testing of GPU code
@@ -71,7 +77,8 @@ about:
     tuning process.
   license: Apache-2.0
   license_file: LICENSE
-  doc_url: https://kerneltuner.github.io
+  homepage: https://github.com/kerneltuner/kernel_tuner
+  documentation: https://kerneltuner.github.io
 
 extra:
   recipe-maintainers:

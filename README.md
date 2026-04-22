@@ -9,7 +9,7 @@ Package license: Apache-2.0
 
 Summary: An easy to use CUDA/OpenCL kernel tuner in Python
 
-Documentation: https://kerneltuner.github.io
+Documentation: https://kerneltuner.github.io/
 
 Kernel Tuner simplifies the software development of optimized and
 auto-tuned GPU programs, by enabling Python-based unit testing of GPU code
@@ -23,7 +23,6 @@ programs, supporting auto-tuning of user-defined parameters in both host
 and device code, supporting output verification of all benchmarked kernels
 during tuning, as well as many optimization strategies to speed up the
 tuning process.
-
 
 Current build status
 ====================
